@@ -1,0 +1,20 @@
+{
+  "name": "teuthis",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Ryan Vandersmith <ryanvandersmith@gmail.com>",
+  "dependencies": {
+    "bs58": "^4.0.1",
+    "level": "^2.0.1",
+    "mkdirp": "^0.5.1",
+    "promise-events": "^0.1.4",
+    "secp256k1": "^3.3.1",
+    "sha256": "^0.2.0",
+    "eccrypto": "latest"
+  },
+  "devDependencies": {
+    "bluebird": "^3.5.1",
+    "rimraf": "^2.6.2",
+    "multimap": "^1.0.2"
+  }
+}

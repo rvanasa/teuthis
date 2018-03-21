@@ -1,0 +1,18 @@
+import history
+
+getTxs(t) = history % filter(.data[0, 1] == t)
+
+deposits = getTxs('D')
+withdrawals = getTxs('W')
+
+balances =
+{
+    (deposits[.address]) += deposits[.amount]
+    (withdrawals[.address]) -= withdrawals[.amount]
+}
+
+validate({address, amount, data}) = switch data[0, 1]:
+    case 'D': amount < balances[.address]
+    default: true
+
+release(address) = balances[address]
