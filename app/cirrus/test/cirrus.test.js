@@ -7,12 +7,8 @@ require('../../../util/network-sandbox')({
 {
 	var client = clients[Math.floor(Math.random() * clients.length)];
 	
-	var user = await client.getFeature('UserCache').add({
-		name: 'Test',
-	});
-	
-	var note = 'Hello world!';
-	await client.emit('note.send', user, note);
+	var data = 'Hello world!';
+	await client.emit('note.send', data);
 	
 	// await client.delay(.1);
 	

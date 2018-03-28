@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = class Token
+module.exports = class Note
 {
 	constructor(client, {})
 	{
@@ -8,19 +8,30 @@ module.exports = class Token
 		
 		this.storage = client.getFeature('Storage').create('note');
 		
-		this.client.on('message:note', async msg =>
+		this.client.on('message:note', async note =>
 		{
-			client.log(`Received message:`, msg.data);
+			client.log(`Received note with timestamp:`, note.time);
 		});
 		
 		this.client.on('note.send', this.send.bind(this));
 	}
 	
-	async send(user, note)
+	async send(msg, key = this.client.functions.privateKey())
 	{
+		var time = Date.now();
+		
+		var receipt = {
+			address: this.client.functions.publicKey(key),
+			time,
+			data: msg,
+		};
+		
 		await this.client.emit('publish', {
 			type: 'note',
-			data: note,
-		}, user.getKeyData());
+			data: this.client.functions.hash(msg),
+			time,
+		}, key);
+		
+		return receipt;
 	}
 }
