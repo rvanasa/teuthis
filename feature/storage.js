@@ -9,7 +9,39 @@ module.exports = class Storage
 	{
 		this.client = client;
 		
-		this.database = level(resolve(client.directory, 'db', path));
+		this.directory = resolve(client.directory, 'db', path || '.');
+		
+		this.Database = Database;
+	}
+	
+	create(path, config)
+	{
+		return new this.Database(this, path, config);
+	}
+}
+
+class Database
+{
+	constructor(storage, path, config)
+	{
+		this.config = config;
+		
+		this.database = level(resolve(storage.client.directory, 'db', path));
+	}
+	
+	get(id, options)
+	{
+		return this.database.get(id, options);
+	}
+	
+	put(id, value, options)
+	{
+		return this.database.put(id, value, options);
+	}
+	
+	del(id, options)
+	{
+		return this.database.del(id, options);
 	}
 	
 	async forEach(receive)

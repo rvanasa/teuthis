@@ -7,7 +7,7 @@ var Network = require('../feature/network');
 
 var MemoryTransport = require('./memory-transport');
 
-module.exports = async function({directory, setup, count = 10, latency = 100, prefix = 'client'})
+module.exports = async function({directory, setup, count = 10, latency = 100, adjacent = 2, prefix = 'client'})
 {
 	return Promise.all(Array.from({length: count}).map(async (_, n) =>
 	{
@@ -29,5 +29,14 @@ module.exports = async function({directory, setup, count = 10, latency = 100, pr
 		});
 		
 		return client;
-	}));
+	})).then(clients => Promise.all(clients.map(async client =>
+	{
+		for(var i = 0; i < adjacent; i++)
+		{
+			await client.emit('discover', {
+				name: clients[Math.floor(Math.random() * clients.length)].config.name,
+			});
+		}
+		return client;
+	})));
 }

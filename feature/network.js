@@ -1,7 +1,5 @@
 'use strict'
 
-var Storage = require('./storage');
-
 module.exports = class Network
 {
 	constructor(client, {transport, info = transport.info, maxPeers = 10})
@@ -14,9 +12,7 @@ module.exports = class Network
 		this.peers = [];
 		this.maxPeers = maxPeers;
 		
-		this.storage = client.load(Storage, {
-			path: 'peers',
-		});
+		this.storage = client.getFeature('Storage').create('peers');
 		
 		this.transport.on('PEER', data => this.client.emit('discover', data));
 		this.transport.on('MSG', data => this.client.emit('receive', data));

@@ -4,8 +4,6 @@ var crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 var base58 = require('bs58');
 
-var Storage = require('./storage');
-
 module.exports = class UserCache
 {
 	constructor(client)
@@ -13,9 +11,7 @@ module.exports = class UserCache
 		this.client = client;
 		
 		this.cache = new Map();
-		this.storage = client.load(Storage, {
-			path: 'users',
-		});
+		this.storage = client.getFeature('Storage').create('users');
 		
 		this.loaded = false;
 	}
@@ -42,20 +38,20 @@ module.exports = class UserCache
 	{
 		var user = new User(this.client, config);
 		
-		this.client.log('Adding user with address: ', user.address);
+		this.client.log('Adding user with address:', user.address);
 		
 		this.cache.set(user.address, user);
 		
-		await this.storage.database.put(user.address, this.serialize(user));
+		await this.storage.put(user.address, this.serialize(user));
 		return user;
 	}
 	
 	async remove(address)
 	{
-		this.client.log('Removing user with address: ', address);
+		this.client.log('Removing user with address:', address);
 		
 		this.cache.delete(address);
-		await this.storage.database.del(address);
+		await this.storage.del(address);
 	}
 	
 	serialize(user)

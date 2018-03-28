@@ -2,14 +2,14 @@
 
 require('../../../util/network-sandbox')({
 	directory: __dirname + '/data',
-	setup: require('../amber-client'),
-}).then(clients =>
+	setup: require('../scythe-client'),
+}).then(async clients =>
 {
 	var client = clients[Math.floor(Math.random() * clients.length)];
-	var app = client.getFeature(require('../feature/amber'));
+	var token = client.getFeature('Token');
+	var channel = client.getFeature('Channel');
 	
-	var key = app.request(1);
 	
-	app.request();
+	await client.delay(.5);
 	
 }).catch(err => console.log(err.stack));

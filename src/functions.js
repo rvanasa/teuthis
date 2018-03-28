@@ -42,8 +42,7 @@ module.exports = {
 	},
 	verify(pub, data, sig)
 	{
-		data = this.serialize(data);
-		return secp256k1.verify(pub, sig, this.hash(data));
+		return secp256k1.verify(this.hash(data), sig, pub);
 	},
 	privateKey()
 	{

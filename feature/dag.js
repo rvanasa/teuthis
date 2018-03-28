@@ -1,7 +1,5 @@
 'use strict'
 
-var Storage = require('./storage');
-
 module.exports = class DAG
 {
 	constructor(client, {type})
@@ -9,9 +7,7 @@ module.exports = class DAG
 		this.client = client;
 		
 		this.type = type;
-		this.storage = client.load(Storage, {
-			path: 'dag-' + type,
-		});
+		this.storage = client.getFeature('Storage').create('dag-' + type);
 		
 		this.client.on('message:' + type, msg => this.onMessage(msg));
 	}

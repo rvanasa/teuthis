@@ -19,7 +19,7 @@ module.exports = class Client extends EventEmitter
 		
 		this.functions = {...defaultFunctions, ...config.functions};
 		
-		this.features = new MultiMap()
+		this.features = new MultiMap();
 		
 		this.on('broadcast', msg => this.emit('receive', msg));
 		this.on('message', msg =>
@@ -71,17 +71,21 @@ module.exports = class Client extends EventEmitter
 	
 	getFeature(id)
 	{
-		var array = this.getFeature(id);
-		return array && array[0];
-	}
-	
-	getFeature(id)
-	{
-		return this.features.get(id);
+		var array = this.features.get(id);
+		if(!array)
+		{
+			throw new Error('Missing feature: `' + id + '`');
+		}
+		return array[array.length - 1];
 	}
 	
 	log(...args)
 	{
 		this.emit('log', args);
+	}
+	
+	delay(seconds)
+	{
+		return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 	}
 }
